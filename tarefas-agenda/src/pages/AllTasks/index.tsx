@@ -3,7 +3,7 @@ import { View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet } from 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useNavigation } from "@react-navigation/native";
-import { addTask } from "../../redux/reducers/taskReducer";
+import { addTask, excludeTask } from "../../redux/reducers/taskReducer";
 import { styles } from "./style";
 
 export const AllTasksScreen = (props: any) => {
@@ -11,13 +11,19 @@ export const AllTasksScreen = (props: any) => {
     const tasks = useSelector((state: RootState) => state.task.tasks);
     const dispatch = useDispatch();
 
+    const [id, setId] = useState('')
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
 
     const handleAddTask = () => {
-        dispatch(addTask({ title, body }));
+        dispatch(addTask({ id,  title, body }));
         setTitle('');
         setBody('');
+    }
+
+    const handleExcludeTask = () => {
+        dispatch(excludeTask({id}));
+        setId('');
     }
 
     return (
@@ -49,9 +55,13 @@ export const AllTasksScreen = (props: any) => {
                     <View key={index} style={styles.task}>
                         <Text style={styles.taskTitle}>{task.title}</Text>
                         <Text style={styles.taskBody}>{task.body}</Text>
+                        <TouchableOpacity onPress={handleExcludeTask}>
+                            <Text>Excluir</Text>
+                        </TouchableOpacity>
                     </View>
                 ))}
             </View>
         </ScrollView>
     )
 }
+

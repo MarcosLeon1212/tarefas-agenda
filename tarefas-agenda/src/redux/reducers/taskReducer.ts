@@ -1,45 +1,39 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Task {
-    id: any;
+    id: number;
     title: string;
     body: string;
 }
 
 interface TaskState {
     tasks: Task[];
+    nextId: number;
 }
 
 const initialState: TaskState = {
-    tasks: []
+    tasks: [],
+    nextId: 1,
 };
 
-export const slice = createSlice({
+const taskSlice = createSlice({
     name: 'task',
     initialState,
     reducers: {
-        
-        setId: (state, action: PayloadAction<{index: number, title: string, body: string}>) => {
-            state.tasks[action.payload.index].id = action.payload.index;
+        addTask: (state, action: PayloadAction<{ title: string; body: string }>) => {
+            const newTask: Task = {
+                id: state.nextId,
+                title: action.payload.title,
+                body: action.payload.body,
+            };
+            state.tasks.push(newTask);
+            state.nextId += 1;
         },
-        
-        setTitle: (state, action: PayloadAction<{ index: number; title: string }>) => {
-            state.tasks[action.payload.index].title = action.payload.title;
-        },
-
-        setBody: (state, action: PayloadAction<{ index: number; body: string }>) => {
-            state.tasks[action.payload.index].body = action.payload.body;
-        },
-
-        addTask: (state, action: PayloadAction<Task>) => {
-            state.tasks.push(action.payload);
-        },
-
-        excludeTask: (state, action: PayloadAction<{ id: any }>) => {
+        excludeTask: (state, action: PayloadAction<{ id: number }>) => {
             state.tasks = state.tasks.filter(task => task.id !== action.payload.id);
-        }
+        },
     }
 });
 
-export const { setTitle, setBody, addTask, excludeTask } = slice.actions;
-export default slice.reducer;
+export const { addTask, excludeTask } = taskSlice.actions;
+export default taskSlice.reducer;

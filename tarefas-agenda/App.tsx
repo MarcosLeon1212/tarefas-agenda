@@ -16,13 +16,16 @@ const App = () => {
 
     return(
         <Provider store={store}>
-             <PersistGate loading={null} persistor={persistor}>
+            
+            
+        <PersistGate loading={null} persistor={persistor}>
+            
              <NavigationContainer>
               
                      <MainTab/>
                 
              </NavigationContainer>
-                </PersistGate>
+             </PersistGate>  
         </Provider>
     )
 }
